@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .routers import health_prediction, authentication, users, admin
 
 ORIGINS = [
+    "https://wellai-shp.onrender.com",
     "http://localhost:3000",
     "http://localhost:8000",
 ]
