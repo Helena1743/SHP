@@ -3,26 +3,21 @@ from dotenv import load_dotenv
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 
-# Load environment variables
 load_dotenv()
 
-# Read the DATABASE_URL directly from .env
-# Example format:
-# postgresql://USER:PASSWORD@HOST:PORT/DATABASE
-DATABASE_URL = os.getenv("DATABASE_URL")
+# Use psycopg (NOT psycopg2)
+DATABASE_URL = os.getenv("postgresql+psycopg://shp_database_user:S9cC2qpSLoz09XyKH9hN2pOvcvdtlb8M@dpg-d4ft1lqdbo4c739qdqj0-a/shp_database
+")
 
-if not DATABASE_URL:
-    raise ValueError("❌ DATABASE_URL is missing. Please add it to your .env.")
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,
+)
 
-# Create SQLAlchemy engine for Postgres
-engine = create_engine(DATABASE_URL)
-
-# Session factory
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db():
-    """Provide a database session for request."""
-    db = SessionLocal()
+    db = session_local()
     try:
         yield db
     finally:
