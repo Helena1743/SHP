@@ -1,29 +1,28 @@
 import os
 from dotenv import load_dotenv
-
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 
-# Load environment variables.
+# Load environment variables
 load_dotenv()
 
-DATABASE_URL = 'mysql+pymysql://{}:{}@{}:{}/{}'.format(
-    os.environ['MYSQL_USER'],
-    os.environ['MYSQL_PASSWORD'],
-    os.environ['MYSQL_HOST'],
-    os.environ['MYSQL_PORT'],
-    os.environ['MYSQL_DATABASE']
-)
+# Read the DATABASE_URL directly from .env
+# Example format:
+# postgresql://USER:PASSWORD@HOST:PORT/DATABASE
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Create the database connection manager.
+if not DATABASE_URL:
+    raise ValueError("❌ DATABASE_URL is missing. Please add it to your .env.")
+
+# Create SQLAlchemy engine for Postgres
 engine = create_engine(DATABASE_URL)
-session_local = sessionmaker(autocommit=False, bind=engine)
 
+# Session factory
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db():
-    '''Returns a session used to communicate with the database with Object 
-    Relation Mapper (ORM) Objects.'''
-    db = session_local()
+    """Provide a database session for request."""
+    db = SessionLocal()
     try:
         yield db
     finally:
