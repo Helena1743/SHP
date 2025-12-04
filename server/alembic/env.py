@@ -6,7 +6,7 @@ from sqlalchemy import engine_from_config, pool
 from sqlalchemy import create_engine
 from alembic import context
 
-from models.dbmodels import Base
+from server.models.dbmodels import Base
 
 # Alembic Config
 config = context.config
