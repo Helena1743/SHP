@@ -7,7 +7,7 @@ Create Date: 2025-10-16 22:53:08.849981
 """
 from typing import Sequence, Union
 from alembic import op
-from models.dbmodels import *
+from server.models.dbmodels import *
 
 # revision identifiers, used by Alembic.
 revision: str = '8184ee23453b'
