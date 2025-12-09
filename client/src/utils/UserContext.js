@@ -1,37 +1,47 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
 
-export const UserContext = createContext(null);
+const UserContext = createContext();
+export const useUser = () => useContext(UserContext);
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    const API_BASE = process.env.REACT_APP_API_BASE;
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setLoading(true);
-    fetch(`${API_BASE}/user/me`, {
-      method: "GET",
-      credentials: "include"
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Not authenticated');
+    // Fetch user from saved token on app load
+    useEffect(() => {
+        const storedToken = localStorage.getItem("token");
+
+        if (!storedToken) {
+            setLoading(false);
+            return;
         }
-        return response.json();
-      })
-      .then(userData => {
-        setUser(userData);
-        setLoading(false);
-      })
-      .catch(() => {
-        setUser(null);
-        setLoading(false);
-      });
-  }, []);
 
-  return (
-    <UserContext.Provider value={{ user, setUser, loading }}>
-      {children}
-    </UserContext.Provider>
-  );
+        axios
+            .get(`${API_BASE}/user/me`, {
+                headers: {
+                    Authorization: `Bearer ${storedToken}`,
+                },
+                withCredentials: false,
+            })
+            .then((res) => {
+                setUser(res.data);
+                setLoading(false);
+            })
+            .catch(() => {
+                logout();
+            });
+    }, []);
+
+    const logout = () => {
+        localStorage.removeItem("token");
+        setUser(null);
+    };
+
+    return (
+        <UserContext.Provider value={{ user, setUser, loading, logout }}>
+            {children}
+        </UserContext.Provider>
+    );
 };
