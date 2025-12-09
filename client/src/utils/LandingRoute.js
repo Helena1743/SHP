@@ -8,49 +8,38 @@ const LandingRoute = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    // No token → user not logged in
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-
     fetch(`${API_BASE}/user/me`, {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      credentials: "include"
     })
       .then(async (response) => {
         if (!response.ok) {
           setUser(null);
-          return;
+        } else {
+          const data = await response.json();
+          setUser(data);
         }
-        const data = await response.json();
-        setUser(data);
+        setLoading(false);
       })
-      .finally(() => setLoading(false));
+      .catch(() => {
+        setUser(null);
+        setLoading(false);
+      });
   }, []);
 
-  // Still checking user
-  if (loading) return <div>Loading...</div>;
+  // Prevent UI from rendering before checking cookie
+  if (loading) return <div />;
 
-  // No user → go to login
-  if (!user) return <Navigate to="/login" replace />;
+  // Not logged in → go to login
+  if (!user) return <Navigate to="/login" />;
 
-  // Route based on role
-  if (user.role === "standard_user")
-    return <Navigate to="/user-landing" replace />;
+  // Redirect user by role
+  if (user.role === "standard_user") return <Navigate to="/user-landing" />;
+  if (user.role === "merchant") return <Navigate to="/merchant-landing" />;
+  if (user.role === "admin") return <Navigate to="/admin-dashboard" />;
 
-  if (user.role === "merchant")
-    return <Navigate to="/merchant-landing" replace />;
-
-  if (user.role === "admin")
-    return <Navigate to="/admin-dashboard" replace />;
-
-  // Unknown role → send back to login
-  return <Navigate to="/login" replace />;
+  // Fallback
+  return <Navigate to="/login" />;
 };
 
 export default LandingRoute;
