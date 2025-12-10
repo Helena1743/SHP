@@ -241,8 +241,8 @@ async def login(request: Request, response: Response, user_cred: LoginCredential
         key='auth_token',
         value=token,
         httponly=True,
-        secure=False,  # Set to false for development
-        samesite='Strict'
+        secure=None,  # Set to false for development
+        samesite='None'
     )
 
     return {'message': 'Successfully logged in.'}
