@@ -308,8 +308,7 @@ def get_current_user(request: Request, db_conn: Session):
             ip_address=payload.get('ip_address'),
             version=payload.get('version')
         )
-        if token_data.email is None or not \
-                token_data.ip_address == request.client.host:
+        if token_data.email is None:
             raise credentials_exception
 
     except InvalidTokenError as exc:
