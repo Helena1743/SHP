@@ -37,7 +37,7 @@ const MerchantLanding = ({ }) => {
         </Typography>
         
         <Typography variant='h6' color='gray'>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at ante at erat tempus laoreet. 
+          Empowering merchants with smart health insights and seamless report management. 
         </Typography>
       </Box>
 
@@ -60,7 +60,7 @@ const MerchantLanding = ({ }) => {
             View Report History
           </Typography>
           <Typography variant='h7' color='gray'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Begin managing health submissions and explore key merchant tools.
           </Typography>
             <Button href="/merchant-reports" size="large" variant="contained" sx={{display: 'flex', width: "150px",  mt: "10px"}}>
               View
