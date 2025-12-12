@@ -78,7 +78,7 @@ const UserLanding = ({ }) => {
         <Box sx={{ mb: 3 }}>
           <Typography variant="h6">
             Welcome to Smart Health Predictive. Our AI Prediction Model has been designed to provide a 
-            personal a personalised risk analysis regarding three notable diseases: stroke, cardiovascular disease (CVD), and diabetes,
+            personalised risk analysis regarding three notable diseases: stroke, cardiovascular disease (CVD), and diabetes,
             providing insight into your health.
           </Typography>
         </Box>
